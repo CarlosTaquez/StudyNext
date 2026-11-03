@@ -1,0 +1,64 @@
+<main class="page">
+  <header class="topbar">
+    <a class="brand" routerLink="/perfil" aria-label="StudyNext, volver al perfil">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>StudyNext</span>
+    </a>
+    <a class="back-link" routerLink="/perfil">← Volver al perfil</a>
+  </header>
+
+  <section class="content" aria-labelledby="settings-title">
+    <p class="eyebrow">Tu cuenta</p>
+    <h1 id="settings-title">Configuración</h1>
+    <p class="intro">Personaliza cómo StudyNext te acompaña en tus estudios.</p>
+
+    <article class="settings-card">
+      <section class="settings-section" aria-labelledby="study-title">
+        <h2 id="study-title">Preferencias de estudio</h2>
+        <div class="setting-row">
+          <div class="setting-copy">
+            <label for="study-reminders">Recordatorios de estudio</label>
+            <p>Recibir avisos para mantener tu rutina.</p>
+          </div>
+          <input class="toggle" id="study-reminders" type="checkbox" checked />
+        </div>
+        <div class="setting-row">
+          <div class="setting-copy">
+            <label for="weekly-summary">Resumen semanal</label>
+            <p>Ver un resumen de tu actividad cada semana.</p>
+          </div>
+          <input class="toggle" id="weekly-summary" type="checkbox" />
+        </div>
+      </section>
+
+      <section class="settings-section" aria-labelledby="appearance-title">
+        <h2 id="appearance-title">Idioma y apariencia</h2>
+        <div class="setting-row">
+          <div class="setting-copy">
+            <label for="language">Idioma</label>
+            <p>Selecciona el idioma de la interfaz.</p>
+          </div>
+          <select id="language" name="language">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="setting-row">
+          <div class="setting-copy">
+            <label for="dark-mode">Modo oscuro</label>
+            <p>Usar colores oscuros en la aplicación.</p>
+          </div>
+          <input class="toggle" id="dark-mode" type="checkbox" />
+        </div>
+      </section>
+
+      <section class="settings-section account-section" aria-labelledby="account-title">
+        <h2 id="account-title">Cuenta</h2>
+        <a class="account-link" routerLink="/recuperar">Cambiar contraseña <span aria-hidden="true">›</span></a>
+        <a class="account-link logout" routerLink="/login">Cerrar sesión <span aria-hidden="true">›</span></a>
+      </section>
+    </article>
+
+    <p class="note">Estas preferencias son visuales por ahora y no se guardan todavía.</p>
+  </section>
+</main>

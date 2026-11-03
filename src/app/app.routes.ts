@@ -4,6 +4,7 @@ import { Register } from './pages/auth/register/register';
 import { Splash } from './pages/auth/splash/splash';
 import { Recovery } from './pages/auth/recovery/recovery';
 import { Profile } from './pages/auth/profile/profile';
+import { Settings } from './pages/auth/settings/settings';
 
 export const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'splash' },
@@ -12,5 +13,6 @@ export const routes: Routes = [
   { path: 'registro', component: Register },
   { path: 'recuperar', component: Recovery },
   { path: 'perfil', component: Profile },
+  { path: 'configuracion', component: Settings },
   { path: '**', redirectTo: 'splash' },
 ];
