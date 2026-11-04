@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f5f7fb" />
+    <meta name="description" content="Organiza tus materias y tareas con StudyNext." />
+    <title>Materias y tareas | StudyNext</title>
+    <link rel="stylesheet" href="academic.css" />
+    <script src="academic.js" defer></script>
+  </head>
+  <body>
+    <div class="shell">
+      <aside class="sidebar" aria-label="Navegación principal">
+        <a class="brand" href="academico.html" aria-label="StudyNext inicio"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7.5 12 4l8 3.5-8 3.5-8-3.5ZM7 9.2v5.1c2.8 2.3 7.2 2.3 10 0V9.2M20 8v6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>StudyNext</a>
+        <p class="nav-label">Espacio de estudio</p>
+        <nav class="nav">
+          <a href="academico.html" class="active" aria-current="page"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="6" height="7" rx="1.5"/><rect x="4" y="14" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg>Materias</a>
+          <a href="#tareas" data-section="tasks"><svg viewBox="0 0 24 24"><path d="M8 5h12M8 12h12M8 19h12M3.5 5h.01M3.5 12h.01M3.5 19h.01"/></svg>Tareas</a>
+        </nav>
+        <p class="nav-label">Tu cuenta</p>
+        <nav class="nav"><a href="index.html"><svg viewBox="0 0 24 24"><path d="M10 17l5-5-5-5M15 12H3m9-8h7a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-7"/></svg>Volver al inicio</a></nav>
+        <div class="sidebar-bottom"><div class="tip"><strong>Un paso a la vez ✨</strong><p>Organiza tus pendientes y deja espacio para aprender.</p></div><div class="user-chip"><span class="avatar">E</span><div><strong>Estudiante</strong><small>Mi espacio de estudio</small></div></div></div>
+      </aside>
+      <main class="main">
+        <div class="topline"><span class="crumb">StudyNext <span aria-hidden="true">/</span> <b>Materias y tareas</b></span><div class="top-actions"><button class="icon-button" type="button" aria-label="Ayuda" title="Tu espacio de estudio"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9a2.5 2.5 0 1 1 4.4 1.6c-1.2 1.2-2 1.4-2 3M12 17h.01"/></svg></button></div></div>
+        <header class="heading"><div><h1>Mis materias</h1><p>Organiza tus asignaturas y mantén tus tareas al día.</p></div><button class="primary" type="button" data-action="new-subject"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>Nueva materia</button></header>
+        <section class="stats" aria-label="Resumen académico"><article class="stat"><span class="stat-icon"><svg viewBox="0 0 24 24"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21V5.5ZM4 17a2 2 0 0 1 2-2h14"/></svg></span><div><small>Materias activas</small><strong id="subject-count">0</strong></div></article><article class="stat"><span class="stat-icon amber"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M8 3v4m8-4v4M4 10h16"/></svg></span><div><small>Por entregar</small><strong id="pending-count">0</strong></div></article><article class="stat"><span class="stat-icon mint"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg></span><div><small>Completadas</small><strong id="completed-count">0</strong></div></article></section>
+        <div class="content-grid"><section class="panel" aria-labelledby="subjects-heading"><div class="panel-head"><div><h2 id="subjects-heading">Tus materias</h2><p>Una vista rápida de cada asignatura</p></div><button class="link-button" type="button" data-action="new-subject">+ Agregar</button></div><div class="subject-list" id="subject-list" aria-live="polite"></div></section>
+          <section class="panel" id="tareas" aria-labelledby="tasks-heading"><div class="panel-head"><div><h2 id="tasks-heading">Tareas</h2><p>Lo que tienes por delante</p></div><button class="link-button" type="button" data-action="new-task">+ Agregar</button></div><div class="filters" role="group" aria-label="Filtrar tareas"><button class="filter selected" type="button" data-filter="all" aria-pressed="true">Todas</button><button class="filter" type="button" data-filter="pending" aria-pressed="false">Pendientes</button><button class="filter" type="button" data-filter="done" aria-pressed="false">Hechas</button></div><div class="task-list" id="task-list" aria-live="polite"></div></section></div>
+      </main>
+      <nav class="mobile-nav" aria-label="Navegación móvil"><a class="active" href="academico.html" aria-current="page"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="14" y="4" width="6" height="7" rx="1.5"/><rect x="4" y="14" width="7" height="6" rx="1.5"/><rect x="14" y="14" width="6" height="6" rx="1.5"/></svg>Materias</a><a href="#tareas" data-section="tasks"><svg viewBox="0 0 24 24"><path d="M8 5h12M8 12h12M8 19h12M3.5 5h.01M3.5 12h.01M3.5 19h.01"/></svg>Tareas</a><a href="index.html"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Cuenta</a></nav>
+    </div>
+    <div id="modal-root"></div><div id="toast-root" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>
