@@ -1,0 +1,27 @@
+:host { min-height: 100vh; display: block; background: #f4f7fb; }
+.page { width: min(100% - 40px, 960px); margin: 0 auto; }
+.topbar { height: 82px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e5ebf2; }
+.brand { display: flex; align-items: center; gap: 10px; color: #182944; font-size: 21px; font-weight: 750; letter-spacing: -0.6px; text-decoration: none; }
+.brand-mark { display: grid; width: 38px; height: 38px; place-items: center; border-radius: 12px; color: #fff; background: #397dce; font-size: 19px; font-weight: 800; }
+.account-label { color: #718096; font-size: 13px; }
+.content { width: min(100%, 680px); margin: 56px auto; }
+.eyebrow { margin: 0 0 8px; color: #397dce; font-size: 12px; font-weight: 700; letter-spacing: 1.4px; text-transform: uppercase; }
+h1 { margin: 0; color: #17233b; font-size: 34px; letter-spacing: -1px; }
+.intro { margin: 9px 0 26px; color: #718096; font-size: 15px; line-height: 1.6; }
+.profile-card { padding: 30px; border: 1px solid #e8edf4; border-radius: 20px; background: #fff; box-shadow: 0 16px 45px #243c5c0d; }
+.identity { display: flex; align-items: center; gap: 17px; padding-bottom: 26px; border-bottom: 1px solid #edf1f6; }
+.avatar { display: grid; width: 66px; height: 66px; flex: 0 0 auto; place-items: center; border: 4px solid #edf5ff; border-radius: 50%; color: #397dce; background: #e0efff; font-size: 20px; font-weight: 750; }
+h2 { margin: 0; color: #17233b; font-size: 20px; }
+.identity p { margin: 6px 0 0; color: #8491a4; font-size: 14px; }
+.details { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 23px; padding: 25px 0; }
+.detail { display: grid; gap: 7px; }
+.detail-label { color: #8491a4; font-size: 12px; }
+.detail-value { color: #34445e; font-size: 14px; font-weight: 600; }
+.actions { display: flex; align-items: center; gap: 18px; padding-top: 21px; border-top: 1px solid #edf1f6; }
+.edit-button { min-height: 44px; padding: 0 18px; border: 0; border-radius: 9px; color: #fff; background: #397dce; font: inherit; font-size: 14px; font-weight: 700; cursor: pointer; }
+.edit-button:hover { background: #2e6db8; }
+.settings-link { color: #397dce; font-size: 14px; font-weight: 600; text-decoration: none; }
+.settings-link:hover { text-decoration: underline; }
+.logout-link { color: #718096; font-size: 14px; font-weight: 600; text-decoration: none; }
+.logout-link:hover { color: #c24141; }
+@media (max-width: 560px) { .page { width: min(100% - 32px, 960px); } .topbar { height: 70px; } .account-label { font-size: 12px; } .content { margin: 38px auto; } .profile-card { padding: 22px 18px; } .details { grid-template-columns: 1fr; gap: 18px; } }

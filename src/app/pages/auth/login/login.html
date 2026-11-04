@@ -1,0 +1,43 @@
+<main class="page">
+  <div class="brand" aria-label="StudyNext">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none">
+        <path d="M4 7.5 12 4l8 3.5-8 3.5-8-3.5Z" />
+        <path d="M7 9.2v5.1c2.8 2.3 7.2 2.3 10 0V9.2M20 8v6" />
+      </svg>
+    </span>
+    <span>StudyNext</span>
+  </div>
+
+  <section class="card" aria-labelledby="login-title">
+    <p class="eyebrow">Tu espacio de aprendizaje</p>
+    <h1 id="login-title">¡Qué bueno verte!</h1>
+    <p class="intro">Inicia sesión para continuar con tus estudios.</p>
+
+    <form>
+      <div class="field">
+        <label for="email">Correo electrónico</label>
+        <input id="email" name="email" type="email" placeholder="tu@correo.com" autocomplete="email" />
+      </div>
+
+      <div class="field">
+        <label for="password">Contraseña</label>
+        <input id="password" name="password" type="password" placeholder="Escribe tu contraseña" autocomplete="current-password" />
+      </div>
+
+      <div class="form-row">
+        <label class="remember" for="remember">
+          <input id="remember" name="remember" type="checkbox" />
+          <span>Recordarme</span>
+        </label>
+        <a routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
+      </div>
+
+      <button class="submit" type="button">Iniciar sesión</button>
+    </form>
+
+    <p class="signup">¿Aún no tienes una cuenta? <a routerLink="/registro">Regístrate</a></p>
+  </section>
+
+  <footer>StudyNext · Aprende a tu ritmo</footer>
+</main>

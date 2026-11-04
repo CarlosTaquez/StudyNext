@@ -1,0 +1,46 @@
+<main class="page">
+  <header class="topbar">
+    <a class="brand" routerLink="/login" aria-label="StudyNext, volver al inicio de sesión">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>StudyNext</span>
+    </a>
+    <span class="account-label">Cuenta de estudiante</span>
+  </header>
+
+  <section class="content" aria-labelledby="profile-title">
+    <p class="eyebrow">Mi cuenta</p>
+    <h1 id="profile-title">Perfil</h1>
+    <p class="intro">Consulta y administra tu información personal.</p>
+
+    <article class="profile-card">
+      <div class="identity">
+        <div class="avatar" aria-hidden="true">JM</div>
+        <div>
+          <h2>Juan Manuel</h2>
+          <p>Estudiante StudyNext</p>
+        </div>
+      </div>
+
+      <div class="details">
+        <div class="detail">
+          <span class="detail-label">Correo electrónico</span>
+          <span class="detail-value">Aún no registrado</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Programa académico</span>
+          <span class="detail-value">Por completar</span>
+        </div>
+        <div class="detail">
+          <span class="detail-label">Semestre</span>
+          <span class="detail-value">Por completar</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="edit-button" type="button">Editar perfil</button>
+        <a class="settings-link" routerLink="/configuracion">Configuración</a>
+        <a class="logout-link" routerLink="/login">Cerrar sesión</a>
+      </div>
+    </article>
+  </section>
+</main>
