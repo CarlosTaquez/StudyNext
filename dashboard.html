@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="description" content="Tu resumen de estudio, calendario y progreso en StudyNext." />
+  <title>Inicio | StudyNext</title>
+  <link rel="stylesheet" href="academic.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <script src="dashboard.js" defer></script>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="dashboard.html"><span class="brand-mark" aria-hidden="true">✦</span>StudyNext</a>
+      <p class="nav-label">Espacio de estudio</p>
+      <nav class="nav">
+        <a href="dashboard.html" data-view="home"><span>⌂</span>Inicio</a>
+        <a href="dashboard.html#calendar" data-view="calendar"><span>▦</span>Calendario</a>
+        <a href="academico.html"><span>▤</span>Materias y tareas</a>
+        <a href="dashboard.html#notifications" data-view="notifications"><span>♧</span>Notificaciones <i id="notice-count" class="notice-count" hidden></i></a>
+        <a href="dashboard.html#progress" data-view="progress"><span>◔</span>Progreso</a>
+      </nav>
+      <div class="sidebar-bottom"><div class="tip"><strong>Un paso a la vez ✨</strong><p>Hoy es una buena oportunidad para avanzar.</p></div><div class="user-chip"><span class="avatar">E</span><div><strong>Estudiante</strong><small>Mi espacio de estudio</small></div></div></div>
+    </aside>
+    <main class="main">
+      <div class="topline"><span class="crumb">StudyNext <span aria-hidden="true">/</span> <b id="breadcrumb">Inicio</b></span><a class="icon-button profile-link" href="src/index.html" aria-label="Cuenta" title="Cuenta">E</a></div>
+      <section class="view" data-page="home">
+        <header class="heading"><div><p class="eyebrow" id="today-label"></p><h1 id="greeting">Hola, estudiante 👋</h1><p>Este es tu espacio para organizar el día y avanzar a tu ritmo.</p></div><a class="primary" href="academico.html">+ Nueva tarea</a></header>
+        <section class="hero-card" aria-label="Próxima tarea"><div class="hero-copy"><span class="hero-kicker">TU PRÓXIMO PASO</span><h2 id="next-title">Vas al día</h2><p id="next-meta">Agrega una tarea para verla aquí.</p></div><div class="hero-date" id="next-date">✓</div></section>
+        <section class="stats" aria-label="Resumen de tareas"><article class="stat"><span class="stat-icon amber">◷</span><div><small>Tareas pendientes</small><strong id="pending-total">0</strong></div></article><article class="stat"><span class="stat-icon mint">✓</span><div><small>Completadas</small><strong id="completed-total">0</strong></div></article><article class="stat"><span class="stat-icon">▤</span><div><small>Materias activas</small><strong id="subject-total">0</strong></div></article></section>
+        <div class="content-grid"><section class="panel"><div class="panel-head"><div><h2>Para hoy</h2><p>Tus tareas con entrega hoy</p></div><a class="link-button" href="dashboard.html#calendar">Ver calendario</a></div><div id="today-tasks" class="dashboard-list"></div></section><section class="panel"><div class="panel-head"><div><h2>Progreso general</h2><p>Tu avance en las tareas</p></div><a class="link-button" href="dashboard.html#progress">Ver detalles</a></div><div class="progress-overview"><div class="ring" id="progress-ring"><span id="progress-percent">0%</span></div><p id="progress-caption">Completa una tarea para empezar a ver tu progreso.</p></div><div class="panel-head subject-day-head"><div><h2>Materias activas</h2><p>Tu espacio de aprendizaje</p></div><a class="link-button" href="academico.html">Ver materias</a></div><div class="dashboard-list compact" id="home-subjects"></div></section></div>
+        <div class="quick-actions"><a href="academico.html"><span>＋</span><b>Organizar tareas</b><small>Crear o actualizar tus pendientes</small></a><a href="dashboard.html#calendar"><span>▦</span><b>Planear la semana</b><small>Revisar entregas por fecha</small></a><a href="dashboard.html#progress"><span>↗</span><b>Ver mi avance</b><small>Celebrar lo que ya lograste</small></a></div>
+      </section>
+      <section class="view" data-page="calendar" hidden><header class="heading"><div><p class="eyebrow">PLANIFICA CON CLARIDAD</p><h1>Calendario</h1><p>Consulta tus tareas y agrega eventos de estudio.</p></div><button class="primary" id="add-event" type="button">+ Nuevo evento</button></header><section class="panel calendar-panel"><div class="calendar-toolbar"><button class="secondary" id="prev-month" type="button" aria-label="Mes anterior">←</button><h2 id="month-title"></h2><button class="secondary" id="next-month" type="button" aria-label="Mes siguiente">→</button><button class="link-button today-button" id="go-today" type="button">Hoy</button></div><div class="calendar-grid" id="calendar-grid" role="grid" aria-label="Calendario mensual"></div></section><section class="panel selected-day-panel"><div class="panel-head"><div><h2 id="selected-date-title">Actividades</h2><p>Tareas y eventos de la fecha seleccionada</p></div></div><div class="dashboard-list" id="selected-day-items"></div></section></section>
+      <section class="view" data-page="notifications" hidden><header class="heading"><div><p class="eyebrow">MANTENTE AL TANTO</p><h1>Notificaciones</h1><p>Entregas próximas y tareas que necesitan atención.</p></div></header><div class="notice-summary" id="notice-summary"></div><section class="panel"><div class="panel-head"><div><h2>Actividad reciente</h2><p>Recordatorios basados en tus fechas de entrega</p></div></div><div class="dashboard-list" id="notifications-list"></div></section></section>
+      <section class="view" data-page="progress" hidden><header class="heading"><div><p class="eyebrow">CADA PASO CUENTA</p><h1>Mi progreso</h1><p>Una mirada a lo que has avanzado en tus estudios.</p></div></header><section class="stats" aria-label="Estadísticas de progreso"><article class="stat"><span class="stat-icon mint">✓</span><div><small>Tareas completadas</small><strong id="progress-done">0</strong></div></article><article class="stat"><span class="stat-icon amber">◷</span><div><small>Pendientes</small><strong id="progress-pending">0</strong></div></article><article class="stat"><span class="stat-icon late-icon">!</span><div><small>Atrasadas</small><strong id="progress-late">0</strong></div></article></section><section class="panel"><div class="panel-head"><div><h2>Progreso por materia</h2><p>Porcentaje de tareas completadas</p></div></div><div id="subject-progress" class="subject-progress"></div></section></section>
+    </main>
+    <nav class="mobile-nav" aria-label="Navegación móvil"><a href="dashboard.html" data-view="home">⌂<small>Inicio</small></a><a href="dashboard.html#calendar" data-view="calendar">▦<small>Calendario</small></a><a href="academico.html">▤<small>Materias</small></a><a href="dashboard.html#progress" data-view="progress">◔<small>Progreso</small></a></nav>
+  </div>
+  <div id="toast-root" aria-live="polite"></div>
+</body>
+</html>
