@@ -49,6 +49,36 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "dashboard.html",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "dashboard.css",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "dashboard.js",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "academic.css",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "academic.js",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "academico.html",
+                "input": ".",
+                "output": "/"
               }
             ],
             "styles": ["src/styles.scss"]
