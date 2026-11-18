@@ -178,7 +178,6 @@
       </div>`;
     }
     document.querySelector('#modal-root').innerHTML = `<div class="modal-backdrop" data-action="backdrop-close"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><div><h2 id="modal-title">${title}</h2><p>${subtitle}</p></div><button class="close" type="button" aria-label="Cerrar" data-action="close-modal">×</button></div><form id="editor-form" data-kind="${kind}" data-id="${escapeHtml(data.id || '')}">${fields}<p class="form-error" id="form-error" hidden></p><div class="modal-actions"><button class="secondary" type="button" data-action="close-modal">Cancelar</button><button class="primary" type="submit">${editing ? 'Guardar cambios' : isSubject ? 'Crear materia' : 'Crear tarea'}</button></div></form></section></div>`;
-    document.querySelector('#modal-root .modal').addEventListener('click', (event) => event.stopPropagation());
     document.querySelector(isSubject ? '#subject-name' : '#task-title').focus();
   }
 
@@ -262,6 +261,7 @@
       return;
     }
     const { action, id } = button.dataset;
+    if (action === 'backdrop-close' && event.target !== button) return;
     if (action === 'new-subject') openModal('subject');
     else if (action === 'new-task') openModal('task');
     else if (action === 'close-modal' || action === 'backdrop-close') document.querySelector('#modal-root').innerHTML = '';
