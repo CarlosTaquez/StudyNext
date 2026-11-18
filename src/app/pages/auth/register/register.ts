@@ -41,6 +41,7 @@ export class Register {
     this.isLoading.set(true);
     try {
       await this.authService.register(name, email, password);
+      localStorage.setItem('studynext.profile.v1', JSON.stringify({ name, email }));
       this.registrationComplete.set(true);
       window.location.assign('/dashboard.html');
     } catch (error: unknown) {

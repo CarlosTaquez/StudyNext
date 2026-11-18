@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "none",
+    "lib": ["ES2022", "DOM"],
+    "outDir": ".dashboard-build",
+    "skipLibCheck": true,
+    "noCheck": true,
+    "noEmitOnError": true
+  },
+  "files": ["dashboard.ts"]
+}

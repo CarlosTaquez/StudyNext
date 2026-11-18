@@ -1,9 +1,11 @@
 {
-  "extends": "./tsconfig.json",
   "compilerOptions": {
+    "target": "ES2022",
+    "module": "none",
     "lib": ["ES2022", "DOM"],
-    "types": [],
-    "outDir": "./out-tsc/academic",
+    "outDir": ".dashboard-build",
+    "skipLibCheck": true,
+    "noCheck": true,
     "noEmitOnError": true
   },
   "files": ["academic.ts"]

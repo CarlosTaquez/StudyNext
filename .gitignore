@@ -2,6 +2,7 @@
 
 # Compiled output
 /dist
+/.dashboard-build
 /tmp
 /out-tsc
 /bazel-out

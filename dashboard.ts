@@ -2,6 +2,7 @@
   'use strict';
   const KEY = 'studynext.academic.v1';
   const EVENT_KEY = 'studynext.dashboard.events.v1';
+  const PROFILE_KEY = 'studynext.profile.v1';
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const dateKey = (date) => `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
@@ -21,6 +22,12 @@
     const done = data.tasks.filter((t) => t.done);
     const dueSorted = pending.filter((t) => t.dueDate).sort((a, b) => a.dueDate.localeCompare(b.dueDate));
     document.querySelector('#today-label').textContent = new Intl.DateTimeFormat('es-CO', { weekday: 'long', day: 'numeric', month: 'long' }).format(today);
+    const profile = read(PROFILE_KEY, {});
+    const name = typeof profile.name === 'string' && profile.name.trim() ? profile.name.trim() : 'Estudiante';
+    document.querySelector('#greeting').textContent = `Hola, ${name}`;
+    document.querySelectorAll('.user-chip strong, .account-menu-user strong').forEach((element) => { element.textContent = name; });
+    const initial = Array.from(name)[0]?.toLocaleUpperCase('es-CO') || 'E';
+    document.querySelectorAll('.user-chip .avatar, .account-menu-user .avatar, #account-trigger').forEach((element) => { element.textContent = initial; });
     document.querySelector('#pending-total').textContent = pending.length;
     document.querySelector('#completed-total').textContent = done.length;
     document.querySelector('#subject-total').textContent = data.subjects.length;
