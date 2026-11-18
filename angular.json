@@ -57,8 +57,8 @@
             ],
             "styles": ["src/styles.scss"],
             "scripts": [
-              { "input": "dashboard.ts", "bundleName": "dashboard", "inject": false },
-              { "input": "academic.ts", "bundleName": "academic", "inject": false }
+              { "input": ".dashboard-build/dashboard.js", "bundleName": "dashboard", "inject": false },
+              { "input": ".dashboard-build/academic.js", "bundleName": "academic", "inject": false }
             ]
           },
           "configurations": {
