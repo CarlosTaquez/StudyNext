@@ -36,8 +36,8 @@
         <a routerLink="/recuperar">¿Olvidaste tu contraseña?</a>
       </div>
 
-      <button class="submit" type="submit">Iniciar sesión</button>
-      <p class="form-message" role="alert" aria-live="polite">{{ message }}</p>
+      <button class="submit" type="submit" [disabled]="isLoading()">{{ isLoading() ? 'Iniciando sesión…' : 'Iniciar sesión' }}</button>
+      <p class="form-message" role="alert" aria-live="polite">{{ message() }}</p>
     </form>
 
     <p class="signup">¿Aún no tienes una cuenta? <a routerLink="/registro">Regístrate</a></p>

@@ -43,8 +43,8 @@
         <span>Acepto los términos de uso y la política de privacidad.</span>
       </label>
 
-      <button class="submit" type="submit">Crear cuenta</button>
-      <p class="form-message" [class.success]="registrationComplete" role="status" aria-live="polite">{{ message }}</p>
+      <button class="submit" type="submit" [disabled]="isLoading()">{{ isLoading() ? 'Creando cuenta…' : 'Crear cuenta' }}</button>
+      <p class="form-message" [class.success]="registrationComplete()" role="status" aria-live="polite">{{ message() }}</p>
     </form>
 
     <p class="signin">¿Ya tienes una cuenta? <a routerLink="/login">Inicia sesión</a></p>
