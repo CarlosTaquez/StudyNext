@@ -93,6 +93,30 @@
     document.querySelector('#breadcrumb').textContent = ({ home: 'Inicio', calendar: 'Calendario', notifications: 'Notificaciones', progress: 'Progreso' })[valid];
   }
   document.addEventListener('click', (event) => {
+    const accountTrigger = event.target.closest('#account-trigger');
+    const accountMenu = document.querySelector('#account-menu');
+    if (accountTrigger) {
+      const isOpen = accountTrigger.getAttribute('aria-expanded') === 'true';
+      accountTrigger.setAttribute('aria-expanded', String(!isOpen));
+      accountMenu.hidden = isOpen;
+      return;
+    }
+    if (!event.target.closest('.account-menu-wrap')) {
+      accountMenu.hidden = true;
+      document.querySelector('#account-trigger').setAttribute('aria-expanded', 'false');
+    }
+    const logout = event.target.closest('[data-action="logout"]');
+    if (logout) {
+      accountMenu.hidden = true;
+      document.querySelector('#account-trigger').setAttribute('aria-expanded', 'false');
+      const confirmed = window.confirm('¿Quieres cerrar la sesión? Tus materias y tareas seguirán guardadas en este navegador.');
+      if (!confirmed) return;
+      for (const key of Object.keys(sessionStorage)) {
+        if (key.startsWith('studynext.auth.') || key.startsWith('studynext.session.')) sessionStorage.removeItem(key);
+      }
+      window.location.href = 'src/index.html';
+      return;
+    }
     const view = event.target.closest('[data-view]');
     if (view) { event.preventDefault(); const hash = view.dataset.view === 'home' ? '' : `#${view.dataset.view}`; history.pushState(null, '', `dashboard.html${hash}`); render(); window.scrollTo(0, 0); }
     const day = event.target.closest('[data-date]');
@@ -113,5 +137,11 @@
   window.addEventListener('hashchange', render);
   window.addEventListener('popstate', render);
   window.addEventListener('storage', render);
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      document.querySelector('#account-menu').hidden = true;
+      document.querySelector('#account-trigger').setAttribute('aria-expanded', 'false');
+    }
+  });
   render();
 })();
