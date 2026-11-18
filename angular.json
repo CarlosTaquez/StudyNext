@@ -53,11 +53,13 @@
               { "glob": "dashboard.html", "input": ".", "output": "." },
               { "glob": "academico.html", "input": ".", "output": "." },
               { "glob": "dashboard.css", "input": ".", "output": "." },
-              { "glob": "academic.css", "input": ".", "output": "." },
-              { "glob": "dashboard.js", "input": ".", "output": "." },
-              { "glob": "academic.js", "input": ".", "output": "." }
+              { "glob": "academic.css", "input": ".", "output": "." }
             ],
-            "styles": ["src/styles.scss"]
+            "styles": ["src/styles.scss"],
+            "scripts": [
+              { "input": "dashboard.ts", "bundleName": "dashboard", "inject": false },
+              { "input": "academic.ts", "bundleName": "academic", "inject": false }
+            ]
           },
           "configurations": {
             "production": {
@@ -73,7 +75,7 @@
                   "maximumError": "8kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "none"
             },
             "development": {
               "optimization": false,
