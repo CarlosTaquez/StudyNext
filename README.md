@@ -70,8 +70,10 @@ src/app/
 dashboard.html        # Panel de estudio
 dashboard.js          # Interacciones y datos académicos locales
 academico.html        # Sección de materias y tareas
-academic.js           # Lógica académica
+academic.ts           # Lógica académica en TypeScript
 ```
+
+`npm start` y `npm run build` compilan `academic.ts` antes de ejecutar Angular. Para recompilar el módulo automáticamente mientras editas el archivo, ejecuta `npm run watch:academic` en otra terminal.
 
 ## Equipo
 

@@ -73,7 +73,7 @@
               },
               {
                 "glob": "academic.js",
-                "input": ".",
+                "input": "out-tsc/academic",
                 "output": "/"
               },
               {
