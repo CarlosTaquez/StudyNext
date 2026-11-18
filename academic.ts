@@ -1,7 +1,36 @@
 (() => {
   'use strict';
 
+  type Priority = 'high' | 'medium' | 'low';
+  type TaskFilter = 'all' | 'pending' | 'done';
+  type ItemKind = 'subject' | 'task';
+
+  interface Subject {
+    id: string;
+    name: string;
+    teacher: string;
+    emoji: string;
+    palette: number;
+  }
+
+  interface Task {
+    id: string;
+    title: string;
+    subjectId: string;
+    dueDate: string;
+    priority: Priority;
+    notes: string;
+    done: boolean;
+  }
+
+  interface AcademicState {
+    subjects: Subject[];
+    tasks: Task[];
+  }
+
   const STORAGE_KEY = 'studynext.academic.v1';
+  const labels: Record<Priority, string> = { high: 'Alta', medium: 'Media', low: 'Baja' };
+  const htmlEntities: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
   const palette = [
     { color: '#627fe8', tint: '#edf0ff', tone: '#627fe8' },
     { color: '#36a987', tint: '#e9f7f2', tone: '#36a987' },
@@ -12,11 +41,11 @@
   ];
   const emojis = ['📘', '🧪', '🧮', '🌍', '🎨', '💻', '📖', '🎓'];
   const today = new Date();
-  const dateOffset = (days) => {
+  const dateOffset = (days: number) => {
     const date = new Date(today.getFullYear(), today.getMonth(), today.getDate() + days);
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
   };
-  const initialData = {
+  const initialData: AcademicState = {
     subjects: [
       { id: 'sub-math', name: 'Matemáticas', teacher: 'Álgebra y geometría', emoji: '🧮', palette: 0 },
       { id: 'sub-bio', name: 'Biología', teacher: 'Ciencias naturales', emoji: '🧪', palette: 1 },
@@ -30,18 +59,18 @@
     ],
   };
 
-  const clone = (value) => JSON.parse(JSON.stringify(value));
-  const escapeHtml = (value) => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
-  let state = loadState();
-  let activeFilter = 'all';
-  let toastTimer;
+  const escapeHtml = (value: string) => String(value).replace(/[&<>"']/g, (char) => htmlEntities[char]);
+  const state = loadState();
+  let activeFilter: TaskFilter = 'all';
+  let toastTimer: number | undefined;
 
-  function loadState() {
+  function loadState(): AcademicState {
     try {
-      const stored = JSON.parse(localStorage.getItem(STORAGE_KEY));
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const stored: AcademicState | null = raw ? JSON.parse(raw) : null;
       if (stored && Array.isArray(stored.subjects) && Array.isArray(stored.tasks)) return stored;
     } catch { /* A damaged local save should not block the app. */ }
-    return clone(initialData);
+    return structuredClone(initialData);
   }
 
   function saveState() {
@@ -52,34 +81,38 @@
     }
   }
 
-  function formatDate(value) {
+  function formatDate(value: string) {
     if (!value) return 'Sin fecha';
     const [year, month, day] = value.split('-').map(Number);
     const due = new Date(year, month - 1, day);
     const base = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const delta = Math.round((due - base) / 86400000);
+    const delta = Math.round((due.getTime() - base.getTime()) / 86400000);
     if (delta === 0) return 'Hoy';
     if (delta === 1) return 'Mañana';
     if (delta === -1) return 'Ayer';
     return new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'short' }).format(due);
   }
 
-  function isOverdue(task) {
+  function normalizePriority(value: string): Priority {
+    return value === 'high' || value === 'low' ? value : 'medium';
+  }
+
+  function isOverdue(task: Task) {
     return !task.done && Boolean(task.dueDate) && task.dueDate < dateOffset(0);
   }
 
-  function subjectById(id) {
+  function subjectById(id: string | undefined) {
     return state.subjects.find((subject) => subject.id === id);
   }
 
   function renderStats() {
-    document.querySelector('#subject-count').textContent = state.subjects.length;
-    document.querySelector('#pending-count').textContent = state.tasks.filter((task) => !task.done).length;
-    document.querySelector('#completed-count').textContent = state.tasks.filter((task) => task.done).length;
+    document.querySelector('#subject-count')!.textContent = String(state.subjects.length);
+    document.querySelector('#pending-count')!.textContent = String(state.tasks.filter((task) => !task.done).length);
+    document.querySelector('#completed-count')!.textContent = String(state.tasks.filter((task) => task.done).length);
   }
 
   function renderSubjects() {
-    const root = document.querySelector('#subject-list');
+    const root = document.querySelector('#subject-list')!;
     if (!state.subjects.length) {
       root.innerHTML = '<div class="empty"><b>Aún no tienes materias</b>Crea tu primera asignatura para empezar a organizarte.</div>';
       return;
@@ -98,7 +131,7 @@
   }
 
   function renderTasks() {
-    const root = document.querySelector('#task-list');
+    const root = document.querySelector('#task-list')!;
     const filtered = state.tasks.filter((task) => activeFilter === 'all' || (activeFilter === 'pending' && !task.done) || (activeFilter === 'done' && task.done));
     filtered.sort((a, b) => Number(a.done) - Number(b.done) || (a.dueDate || '9999').localeCompare(b.dueDate || '9999'));
     if (!filtered.length) {
@@ -108,8 +141,7 @@
     }
     root.innerHTML = filtered.map((task) => {
       const subject = subjectById(task.subjectId);
-      const priority = ['high', 'medium', 'low'].includes(task.priority) ? task.priority : 'medium';
-      const labels = { high: 'Alta', medium: 'Media', low: 'Baja' };
+      const priority = normalizePriority(task.priority);
       return `<article class="task-row${task.done ? ' done' : ''}">
         <button class="check" type="button" aria-label="${task.done ? 'Marcar como pendiente' : 'Marcar como completada'}: ${escapeHtml(task.title)}" aria-pressed="${task.done}" data-action="toggle-task" data-id="${escapeHtml(task.id)}">${task.done ? '<svg viewBox="0 0 16 16"><path d="m3 8 3 3 7-7"/></svg>' : ''}</button>
         <div class="task-copy"><strong>${escapeHtml(task.title)}</strong><div class="task-meta"><span>${escapeHtml(subject?.name || 'Sin materia')}</span><span class="tag ${priority}">${labels[priority]}</span><span class="due${isOverdue(task) ? ' late' : ''}">${isOverdue(task) ? 'Atrasada · ' : 'Entrega · '}${escapeHtml(formatDate(task.dueDate))}</span></div></div>
@@ -123,15 +155,16 @@
     renderTasks();
   }
 
-  function showToast(message) {
+  function showToast(message: string) {
     const root = document.querySelector('#toast-root');
     if (!root) return;
     root.innerHTML = `<div class="toast" role="status">${escapeHtml(message)}</div>`;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { root.innerHTML = ''; }, 2600);
+    toastTimer = window.setTimeout(() => { root.innerHTML = ''; }, 2600);
   }
 
-  function openMenu(type, id, anchor) {
+  function openMenu(type: ItemKind, id: string | undefined, anchor: HTMLElement) {
+    if (!id || !anchor.parentElement) return;
     document.querySelector('.menu-popup')?.remove();
     const menu = document.createElement('div');
     menu.className = 'menu-popup';
@@ -139,8 +172,8 @@
     menu.innerHTML = type === 'subject'
       ? '<button type="button" role="menuitem" data-action="edit-subject">Editar materia</button><button type="button" role="menuitem" data-action="delete-subject">Eliminar materia</button>'
       : '<button type="button" role="menuitem" data-action="edit-task">Editar tarea</button><button type="button" role="menuitem" data-action="delete-task">Eliminar tarea</button>';
-    menu.dataset.menuType = type;
-    menu.dataset.id = id;
+    menu.dataset['menuType'] = type;
+    menu.dataset['id'] = id;
     anchor.parentElement.append(menu);
   }
 
@@ -148,7 +181,7 @@
     return state.subjects.map((subject) => `<option value="${escapeHtml(subject.id)}"${subject.id === selected ? ' selected' : ''}>${escapeHtml(subject.name)}</option>`).join('');
   }
 
-  function openModal(kind, existing = null) {
+  function openModal(...[kind, existing]: ['subject', Subject?] | ['task', Task?]) {
     if (kind === 'task' && !state.subjects.length) {
       showToast('Primero crea una materia para poder agregar tareas.');
       openModal('subject');
@@ -156,11 +189,11 @@
     }
     const editing = Boolean(existing);
     const isSubject = kind === 'subject';
-    const data = existing || {};
     const title = isSubject ? (editing ? 'Editar materia' : 'Nueva materia') : (editing ? 'Editar tarea' : 'Nueva tarea');
     const subtitle = isSubject ? 'Mantén tus asignaturas organizadas.' : 'Añade un pendiente a tu lista de estudio.';
     let fields;
     if (isSubject) {
+      const data: Partial<Subject> = existing ?? {};
       const paletteIndex = Number(data.palette) || 0;
       fields = `<div class="form-grid">
         <div class="field full"><label for="subject-name">Nombre de la materia</label><input id="subject-name" name="name" maxlength="60" required value="${escapeHtml(data.name || '')}" placeholder="Ej. Física" /></div>
@@ -169,6 +202,7 @@
         <div class="field"><label>Color</label><div class="color-choices">${palette.map((color, index) => `<button class="color-choice${index === paletteIndex ? ' chosen' : ''}" type="button" data-palette="${index}" aria-label="Color ${index + 1}" aria-pressed="${index === paletteIndex}" style="background:${color.color}"></button>`).join('')}</div><input type="hidden" name="palette" value="${paletteIndex}" /></div>
       </div>`;
     } else {
+      const data: Partial<Task> = existing ?? {};
       fields = `<div class="form-grid">
         <div class="field full"><label for="task-title">Nombre de la tarea</label><input id="task-title" name="title" maxlength="100" required value="${escapeHtml(data.title || '')}" placeholder="Ej. Resolver ejercicios de la página 20" /></div>
         <div class="field"><label for="task-subject">Materia</label><select id="task-subject" name="subjectId" required>${subjectOptions(data.subjectId || state.subjects[0]?.id)}</select></div>
@@ -177,21 +211,21 @@
         <div class="field"><label for="task-notes">Notas <span style="font-weight:400;color:#929caf">(opcional)</span></label><textarea id="task-notes" name="notes" maxlength="300" placeholder="Detalles para recordar…">${escapeHtml(data.notes || '')}</textarea></div>
       </div>`;
     }
-    document.querySelector('#modal-root').innerHTML = `<div class="modal-backdrop" data-action="backdrop-close"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><div><h2 id="modal-title">${title}</h2><p>${subtitle}</p></div><button class="close" type="button" aria-label="Cerrar" data-action="close-modal">×</button></div><form id="editor-form" data-kind="${kind}" data-id="${escapeHtml(data.id || '')}">${fields}<p class="form-error" id="form-error" hidden></p><div class="modal-actions"><button class="secondary" type="button" data-action="close-modal">Cancelar</button><button class="primary" type="submit">${editing ? 'Guardar cambios' : isSubject ? 'Crear materia' : 'Crear tarea'}</button></div></form></section></div>`;
-    document.querySelector('#modal-root .modal').addEventListener('click', (event) => event.stopPropagation());
-    document.querySelector(isSubject ? '#subject-name' : '#task-title').focus();
+    document.querySelector('#modal-root')!.innerHTML = `<div class="modal-backdrop" data-action="backdrop-close"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-head"><div><h2 id="modal-title">${title}</h2><p>${subtitle}</p></div><button class="close" type="button" aria-label="Cerrar" data-action="close-modal">×</button></div><form id="editor-form" data-kind="${kind}" data-id="${escapeHtml(existing?.id || '')}">${fields}<p class="form-error" id="form-error" hidden></p><div class="modal-actions"><button class="secondary" type="button" data-action="close-modal">Cancelar</button><button class="primary" type="submit">${editing ? 'Guardar cambios' : isSubject ? 'Crear materia' : 'Crear tarea'}</button></div></form></section></div>`;
+    document.querySelector<HTMLInputElement>(isSubject ? '#subject-name' : '#task-title')?.focus();
   }
 
-  function persistForm(form) {
-    const kind = form.dataset.kind;
-    const id = form.dataset.id;
-    const values = Object.fromEntries(new FormData(form).entries());
-    const name = (values.name || values.title || '').trim();
-    const error = document.querySelector('#form-error');
+  function persistForm(form: HTMLFormElement) {
+    const { kind, id } = form.dataset;
+    const values = new FormData(form);
+    const field = (name: string) => String(values.get(name) ?? '');
+    const nameInput = form.querySelector<HTMLInputElement>(kind === 'subject' ? '#subject-name' : '#task-title');
+    const name = (nameInput?.value ?? '').trim();
+    const error = form.querySelector<HTMLElement>('#form-error')!;
     if (!name) {
       error.textContent = kind === 'subject' ? 'Escribe el nombre de la materia.' : 'Escribe el nombre de la tarea.';
       error.hidden = false;
-      (kind === 'subject' ? form.elements.name : form.elements.title).focus();
+      nameInput?.focus();
       return;
     }
     if (kind === 'subject') {
@@ -199,27 +233,41 @@
       if (duplicate) {
         error.textContent = 'Ya existe una materia con ese nombre.';
         error.hidden = false;
-        form.elements.name.focus();
+        nameInput?.focus();
         return;
       }
-      const subject = { id: id || `sub-${crypto.randomUUID()}`, name, teacher: values.teacher.trim(), emoji: values.emoji || '📘', palette: Number(values.palette) || 0 };
+      const subject: Subject = {
+        id: id || `sub-${crypto.randomUUID()}`,
+        name,
+        teacher: field('teacher').trim(),
+        emoji: field('emoji') || '📘',
+        palette: Number(field('palette')) || 0,
+      };
       const index = state.subjects.findIndex((item) => item.id === id);
       if (index >= 0) state.subjects[index] = subject;
       else state.subjects.push(subject);
       showToast(index >= 0 ? 'Materia actualizada.' : 'Materia creada.');
     } else {
-      const task = { id: id || `task-${crypto.randomUUID()}`, title: name, subjectId: values.subjectId, dueDate: values.dueDate, priority: values.priority, notes: values.notes.trim(), done: state.tasks.find((item) => item.id === id)?.done || false };
       const index = state.tasks.findIndex((item) => item.id === id);
+      const task: Task = {
+        id: id || `task-${crypto.randomUUID()}`,
+        title: name,
+        subjectId: field('subjectId'),
+        dueDate: field('dueDate'),
+        priority: normalizePriority(field('priority')),
+        notes: field('notes').trim(),
+        done: state.tasks[index]?.done ?? false,
+      };
       if (index >= 0) state.tasks[index] = task;
       else state.tasks.push(task);
       showToast(index >= 0 ? 'Tarea actualizada.' : 'Tarea creada.');
     }
     saveState();
-    document.querySelector('#modal-root').innerHTML = '';
+    document.querySelector('#modal-root')!.replaceChildren();
     render();
   }
 
-  function deleteItem(type, id) {
+  function deleteItem(type: ItemKind, id: string | undefined) {
     if (type === 'subject') {
       const subject = subjectById(id);
       if (!subject) return;
@@ -238,9 +286,13 @@
   }
 
   document.addEventListener('click', (event) => {
-    const filter = event.target.closest('[data-filter]');
-    if (filter) {
-      activeFilter = filter.dataset.filter;
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const filter = target.closest<HTMLElement>('[data-filter]');
+    const filterValue = filter?.dataset['filter'];
+    if (filterValue === 'all' || filterValue === 'pending' || filterValue === 'done') {
+      activeFilter = filterValue;
       document.querySelectorAll('[data-filter]').forEach((button) => {
         const selected = button === filter;
         button.classList.toggle('selected', selected);
@@ -250,66 +302,72 @@
       return;
     }
 
-    const sectionLink = event.target.closest('[data-section="tasks"]');
+    const sectionLink = target.closest('[data-section="tasks"]');
     if (sectionLink) {
-      document.querySelector('#tareas').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelector('#tareas')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
 
-    const button = event.target.closest('[data-action], [data-emoji], [data-palette]');
+    const button = target.closest<HTMLElement>('[data-action], [data-emoji], [data-palette]');
     if (!button) {
-      if (!event.target.closest('.menu-popup')) document.querySelector('.menu-popup')?.remove();
+      if (!target.closest('.menu-popup')) document.querySelector('.menu-popup')?.remove();
       return;
     }
     const { action, id } = button.dataset;
+    if (action === 'backdrop-close' && target !== button) return;
     if (action === 'new-subject') openModal('subject');
     else if (action === 'new-task') openModal('task');
-    else if (action === 'close-modal' || action === 'backdrop-close') document.querySelector('#modal-root').innerHTML = '';
+    else if (action === 'close-modal' || action === 'backdrop-close') document.querySelector('#modal-root')!.replaceChildren();
     else if (action === 'subject-menu') openMenu('subject', id, button);
     else if (action === 'task-menu') openMenu('task', id, button);
     else if (action === 'toggle-task') {
       const task = state.tasks.find((item) => item.id === id);
       if (task) { task.done = !task.done; saveState(); render(); showToast(task.done ? 'Tarea completada. ¡Buen trabajo!' : 'Tarea marcada como pendiente.'); }
     } else if (action === 'edit-subject') {
-      const menu = button.closest('.menu-popup');
-      const subject = subjectById(menu.dataset.id);
-      menu.remove();
+      const menu = button.closest<HTMLElement>('.menu-popup');
+      const subject = subjectById(menu?.dataset['id']);
+      menu?.remove();
       if (subject) openModal('subject', subject);
     } else if (action === 'delete-subject') {
-      const menu = button.closest('.menu-popup');
-      const subjectId = menu.dataset.id;
-      menu.remove();
+      const menu = button.closest<HTMLElement>('.menu-popup');
+      const subjectId = menu?.dataset['id'];
+      menu?.remove();
       deleteItem('subject', subjectId);
     } else if (action === 'edit-task') {
-      const menu = button.closest('.menu-popup');
-      const task = state.tasks.find((item) => item.id === menu.dataset.id);
-      menu.remove();
+      const menu = button.closest<HTMLElement>('.menu-popup');
+      const task = state.tasks.find((item) => item.id === menu?.dataset['id']);
+      menu?.remove();
       if (task) openModal('task', task);
     } else if (action === 'delete-task') {
-      const menu = button.closest('.menu-popup');
-      const taskId = menu.dataset.id;
-      menu.remove();
+      const menu = button.closest<HTMLElement>('.menu-popup');
+      const taskId = menu?.dataset['id'];
+      menu?.remove();
       deleteItem('task', taskId);
-    } else if (button.dataset.emoji) {
+    } else if (button.dataset['emoji']) {
       const form = button.closest('form');
-      form.elements.emoji.value = button.dataset.emoji;
+      const input = form?.querySelector<HTMLInputElement>('input[name="emoji"]');
+      if (!form || !input) return;
+      input.value = button.dataset['emoji'];
       form.querySelectorAll('[data-emoji]').forEach((choice) => { choice.classList.toggle('chosen', choice === button); choice.setAttribute('aria-pressed', String(choice === button)); });
-    } else if (button.dataset.palette !== undefined) {
+    } else if (button.dataset['palette'] !== undefined) {
       const form = button.closest('form');
-      form.elements.palette.value = button.dataset.palette;
+      const input = form?.querySelector<HTMLInputElement>('input[name="palette"]');
+      if (!form || !input) return;
+      input.value = button.dataset['palette'];
       form.querySelectorAll('[data-palette]').forEach((choice) => { choice.classList.toggle('chosen', choice === button); choice.setAttribute('aria-pressed', String(choice === button)); });
     }
   });
 
   document.addEventListener('submit', (event) => {
-    if (event.target.id !== 'editor-form') return;
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement) || form.id !== 'editor-form') return;
     event.preventDefault();
-    persistForm(event.target);
+    persistForm(form);
   });
 
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape') {
-      document.querySelector('#modal-root').innerHTML = '';
+      document.querySelector('#modal-root')!.replaceChildren();
       document.querySelector('.menu-popup')?.remove();
     }
   });

@@ -21,6 +21,10 @@ h1 { margin: 0; color: #17233b; font-size: clamp(27px, 6vw, 32px); letter-spacin
 .field { margin-bottom: 19px; }
 label { display: block; margin-bottom: 8px; color: #34445e; font-size: 13px; font-weight: 650; }
 input:not([type="checkbox"]) { width: 100%; height: 49px; padding: 0 14px; border: 1px solid #dce4ee; border-radius: 10px; outline: none; color: #17233b; background: #fff; font: inherit; font-size: 14px; transition: border-color 150ms ease, box-shadow 150ms ease; }
+.password-control { position: relative; }
+.password-control input { padding-right: 80px; }
+.visibility-toggle { position: absolute; top: 50%; right: 12px; transform: translateY(-50%); padding: 5px; border: 0; color: #397dce; background: transparent; font: inherit; font-size: 12px; font-weight: 700; cursor: pointer; }
+.visibility-toggle:focus-visible { outline: 2px solid #397dce; outline-offset: 2px; border-radius: 4px; }
 input::placeholder { color: #a3afbf; }
 input:focus { border-color: #397dce; box-shadow: 0 0 0 3px #397dce1c; }
 .form-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 0 24px; font-size: 13px; }
@@ -30,6 +34,8 @@ a { color: #397dce; text-decoration: none; font-weight: 650; }
 a:hover { text-decoration: underline; }
 .submit { width: 100%; height: 50px; border: 0; border-radius: 10px; color: #fff; background: #397dce; box-shadow: 0 8px 18px #397dce35; font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 150ms ease, transform 150ms ease; }
 .submit:hover { background: #2e6db8; transform: translateY(-1px); }
+.form-message { margin: 14px 0 0; color: #b42318; font-size: 13px; line-height: 1.5; text-align: center; }
+.form-message:empty { display: none; }
 .signup { margin: 24px 0 0; color: #718096; font-size: 14px; text-align: center; }
 footer { margin-top: 22px; color: #8491a4; font-size: 12px; text-align: center; }
 @media (max-width: 460px) { :host { padding: 24px 16px; } .card { padding: 29px 23px; } }

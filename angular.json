@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "npm",
+    "analytics": false
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -50,10 +51,26 @@
                 "glob": "**/*",
                 "input": "public"
               },
-              { "glob": "dashboard.html", "input": ".", "output": "." },
-              { "glob": "academico.html", "input": ".", "output": "." },
-              { "glob": "dashboard.css", "input": ".", "output": "." },
-              { "glob": "academic.css", "input": ".", "output": "." }
+              {
+                "glob": "dashboard.html",
+                "input": ".",
+                "output": "."
+              },
+              {
+                "glob": "academico.html",
+                "input": ".",
+                "output": "."
+              },
+              {
+                "glob": "dashboard.css",
+                "input": ".",
+                "output": "."
+              },
+              {
+                "glob": "academic.css",
+                "input": ".",
+                "output": "."
+              }
             ],
             "styles": ["src/styles.scss"],
             "scripts": [
